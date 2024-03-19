@@ -1,3 +1,20 @@
+import pandas as pd
+
+orders_df = spark.read.json("dbfs:/path/to/Order.json")
+
+orders_df.write.saveAsTable("orders_raw")
+
+
+
+
+
+customers_pd = pd.read_excel("dbfs:/path/to/Customer.xlsx")
+
+customers_df = spark.createDataFrame(customers_pd)
+
+customers_df.write.saveAsTable("customers_raw")
+
+
 products_df = spark.read.csv("dbfs:/path/to/Product.csv", header=True)
 
 products_df.write.saveAsTable("products_raw")
