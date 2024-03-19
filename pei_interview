@@ -1,0 +1,45 @@
+products_df = spark.read.csv("dbfs:/path/to/Product.csv", header=True)
+
+products_df.write.saveAsTable("products_raw")
+
+
+
+
+
+
+
+
+
+enriched_orders_df = orders_df \
+
+    .join(customers_df, "customer_id") \
+
+    .join(products_df, "product_id") \
+
+    .withColumn("profit", expr("sale_price - cost_price").cast("decimal(10,2)"))
+
+enriched_orders_df.write.saveAsTable("enriched_orders")
+
+
+
+
+
+
+
+agg_df = enriched_orders_df.groupBy("year", "product_category").sum("profit")
+
+agg_df.write.saveAsTable("aggregate_table")
+
+
+
+
+
+
+
+
+
+SELECT year, SUM(profit) AS total_profit
+
+FROM aggregate_table
+
+GROUP BY year
